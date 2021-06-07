@@ -1,0 +1,10 @@
+env: dev
+version: 0.0.1
+mysql:
+  userName: root
+  pass: ziv
+  host: localhost
+  prot: 3306
+  dbName: shopping
+server:
+  port: 3002

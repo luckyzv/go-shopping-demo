@@ -1,0 +1,10 @@
+version: 3
+services:
+  go-shopping:
+    build: ./main
+    ports:
+    - "3002:3002"
+    container_name: go-shopping
+    environment:
+      ENV: prod
+networks:
