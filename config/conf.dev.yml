@@ -4,17 +4,17 @@ mysql:
   userName: root
   pass: ziv
   host: localhost
-  prot: 3306
-  dbName: shopping
+  port: 3306
+  dbName: go_shopping
 redis:
   addr: 'localhost:6379'
   password: ziv
   db: 0
   sentinelMasterName: mymaster
   sentinelAddr:
-    - "26379"
-    - "26380"
-    - "26381"
+    - ":26379"
+    - ":26380"
+    - ":26381"
 amqp:
   userName: admin
   password: admin

@@ -21,6 +21,7 @@ func init()  {
   redisClient = redis.NewFailoverClient(&redis.FailoverOptions{
     MasterName: viperConfig.SentinelMasterName,
     SentinelAddrs: viperConfig.SentinelAddr,
+    Password: viperConfig.Password,
   })
 }
 

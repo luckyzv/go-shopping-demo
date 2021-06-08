@@ -28,7 +28,7 @@ type RedisConfig struct {
   Password string `json:"password"`
   DB int `json:"db"`
   SentinelMasterName string `json:"sentinelMasterName"`
-  SentinelAddr []string `mapstructure:"sentinel-addr"`
+  SentinelAddr []string `json:"sentinel-addr"`
 }
 
 type AmqpConfig struct {

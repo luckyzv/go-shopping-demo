@@ -15,10 +15,7 @@ func init()  {
   dsn := fmt.Sprintf("%s:%s" + "@tcp(" + "%s:%s" + ")/%s" + "?charset=utf8&parseTime=True&loc=Local",
     viperConfig.UserName, viperConfig.Pass, viperConfig.Host, viperConfig.Port, viperConfig.DbName)
 
-  db, err := gorm.Open(mysql.New(mysql.Config{
-    DSN: dsn,
-    SkipInitializeWithVersion: false,
-  }), &gorm.Config{})
+  db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
   if err != nil  {
     panic(fmt.Errorf("Connet mysql failed, err: %s \n", err))
   }
