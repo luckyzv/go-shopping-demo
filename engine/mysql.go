@@ -5,6 +5,7 @@ import (
   "gorm.io/driver/mysql"
   "gorm.io/gorm"
   "shopping/config"
+  "shopping/model"
   "time"
 )
 
@@ -30,6 +31,11 @@ func init()  {
   sqlDb.SetMaxIdleConns(10)
   sqlDb.SetMaxOpenConns(150)
   sqlDb.SetConnMaxLifetime(time.Hour)
+
+  // 初始化table
+  db.AutoMigrate(&model.User{}, &model.Product{})
+
+  fmt.Println("初始化数据库成功")
 }
 
 func GetMysqlClient() *gorm.DB {
