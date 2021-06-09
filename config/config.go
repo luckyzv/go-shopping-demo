@@ -13,6 +13,7 @@ type Config struct {
   Redis RedisConfig  `mapstructure:"redis"`
   Server ServerConfig `mapstructure:"server"`
   Amqp AmqpConfig `mapstructure:"amqp"`
+  Logger LoggerConfig `mapstructure:"logger"`
 }
 
 type MysqlConfig struct {
@@ -35,6 +36,11 @@ type AmqpConfig struct {
   UserName string  `json:"userName"`
   Password string `json:"password"`
   Host string  `json:"host"`
+}
+
+type LoggerConfig struct {
+  FilePath string `json:"filePath"`
+  FileName string `json:"fileName"`
 }
 
 type ServerConfig struct {
@@ -86,4 +92,8 @@ func GetRedisConfig() RedisConfig  {
 
 func GetAmqpConfig() AmqpConfig {
   return viperConfig.Amqp
+}
+
+func GetLoggerConfig() LoggerConfig {
+  return viperConfig.Logger
 }

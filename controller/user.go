@@ -5,10 +5,11 @@ import (
   "net/http"
   "shopping/common"
   "shopping/common/constant"
+  "shopping/middleware"
 )
 
 func UserRegister(c *gin.Context) {
-  //group := app.Group("/api/v1/register")
-  //group.POST("/doSignIg", user.)
+  logger := middleware.GetLogger()
+  logger.Debug("oh 内容%d ")
   common.Response(c, http.StatusOK, constant.SUCCESS, nil)
 }

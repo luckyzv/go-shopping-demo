@@ -19,5 +19,8 @@ amqp:
   userName: admin
   password: admin
   host: 'localhost:5672/'
+logger:
+  filePath: './logs'
+  fileName: 'api.log'
 server:
   port: 3002

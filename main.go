@@ -4,11 +4,13 @@ import (
   "github.com/gin-gonic/gin"
   "shopping/config"
   _ "shopping/engine"
+  "shopping/middleware"
   "shopping/router"
 )
 
 func main() {
   r := gin.Default()
+  r.Use(middleware.LoggerToFile())
 
   router.Init(r)
 
