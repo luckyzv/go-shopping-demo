@@ -14,6 +14,42 @@ type User struct {
   Status string `json:"status" gorm:"type:enum('published','pending','deleted');default:pending;comment:注册状态"`
 }
 
-//func (db *gorm.DB) ExistUserByPhone(phone string) (bool, error)  {
-//
-//}
+func ExistUserByEmail(db *gorm.DB, email string) (bool, error)  {
+  var user User
+  err := db.Select("id").Where("email = ? AND deleted_at IS NULL", email).First(&user).Error
+  if err != nil && err != gorm.ErrRecordNotFound {
+    return false, err
+  }
+  if user.ID > 0 {
+    return true, nil
+  }
+  return false, nil
+}
+
+func GetUsers()  {
+
+}
+
+func GetUserById(db *gorm.DB, id string) (*User, error)  {
+  var user User
+  err := db.Where("id = ? AND deleted_at IS NULL", id).First(&user).Error
+  if err != nil && err != gorm.ErrRecordNotFound {
+    return nil, err
+  }
+  return &user, nil
+}
+
+func CreateUser(db *gorm.DB, data map[string]interface{}) error  {
+  user := User{
+    Name: data["name"].(string),
+    PassWord: data["password"].(string),
+    Age: data["age"].(int),
+    Email: data["email"].(string),
+    Phone: data["phone"].(string),
+    Status: "pending",
+  }
+  if err := db.Create(&user).Error; err != nil {
+    return err
+  }
+  return nil
+}

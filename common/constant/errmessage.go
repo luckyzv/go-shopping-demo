@@ -5,8 +5,11 @@ var MessageFlags = map[int]string{
   SUCCESS: "success",
   ERROR: "fail",
 
+  ErrorRequiredParamFail: "必传参数为空",
+
   // 用户相关错误
-  ERROR_AUTH_CHECK_TOKEN_FAIL: "Token鉴权失败",
+
+  ErrorAuthCheckTokenFail: "Token鉴权失败",
 
   // 产品相关错误
 

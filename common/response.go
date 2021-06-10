@@ -43,8 +43,8 @@ func NotFound(c *gin.Context)  {
   c.Abort()
 }
 
-func FailedParamResponse(c *gin.Context, code, errorCode int)  {
-  c.JSON(code, FailedResponseBody{
+func FailedParamResponse(c *gin.Context, errorCode int)  {
+  c.JSON(http.StatusUnauthorized, FailedResponseBody{
     Code: errorCode,
     Message: "参数验证失败",
     Url: c.Request.URL.Path,
