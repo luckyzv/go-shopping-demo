@@ -7,7 +7,7 @@ mysql:
   port: 3306
   dbName: go_shopping
 redis:
-  addr: 'localhost:6379'
+  addr: "localhost:6379"
   password: ziv
   db: 0
   sentinelMasterName: mymaster
@@ -18,9 +18,9 @@ redis:
 amqp:
   userName: admin
   password: admin
-  host: 'localhost:5672/'
+  host: "localhost:5672/"
 logger:
-  filePath: './logs'
-  fileName: 'api.log'
+  filePath: "./logs"
+  fileName: "api.log"
 server:
   port: 3002
