@@ -6,8 +6,7 @@ import (
 )
 
 type UserDto struct {
-  gorm.Model
-
+  Id uint `json:"id"`
   Name string  `json:"name"`
   PassWord string `json:"password"`
   Age int `json:"age"`
@@ -18,7 +17,7 @@ type UserDto struct {
 }
 
 type UserLoginDto struct {
-  Email string `json:"email" binding:"required"`
+  Phone string `json:"phone" binding:"required"`
   Password string `json:"password" binding:"required"`
 }
 
@@ -33,3 +32,17 @@ func UserInfo(user model.User) UserDto {
   }
 }
 
+func ToUser(userDto UserDto) model.User  {
+  return model.User{
+    Model:     gorm.Model{
+      ID: userDto.Id,
+    },
+    Name:      userDto.Name,
+    PassWord:  userDto.PassWord,
+    Age:       userDto.Age,
+    Email:     userDto.Email,
+    Phone:     userDto.Phone,
+    AvatarUrl: userDto.AvatarUrl,
+    Status:    userDto.Status,
+  }
+}

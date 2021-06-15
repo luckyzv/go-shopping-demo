@@ -1,6 +1,8 @@
 package model
 
-import "gorm.io/gorm"
+import (
+  "gorm.io/gorm"
+)
 
 type User struct {
   gorm.Model
@@ -8,15 +10,15 @@ type User struct {
   Name string  `json:"name" gorm:"size:16;not null,comment:用户姓名"`
   PassWord string `json:"password" gorm:"type:varchar(20);column:password;not null"`
   Age int `json:"age" gorm:"type:tinyint;unsigned;default:0"`
-  Email string `json:"email" gorm:"type:varchar(30);unique"`
+  Email string `json:"email" gorm:"type:varchar(30);not null;default:''"`
   Phone string  `json:"phone" gorm:"size:11;not null;uniqueIndex"`
-  AvatarUrl string `json:"avatarUrl" gorm:"type:varchar(255)"`
+  AvatarUrl string `json:"avatarUrl" gorm:"type:varchar(255);not null;default:''"`
   Status string `json:"status" gorm:"type:enum('published','pending','deleted');default:pending;comment:注册状态"`
 }
 
-func ExistUserByEmail(db *gorm.DB, email string) (bool, error)  {
+func ExistUserByPhone(db *gorm.DB, phone string) (bool, error)  {
   var user User
-  err := db.Select("id").Where("email = ? AND deleted_at IS NULL", email).First(&user).Error
+  err := db.Select("id").Where("phone = ? AND deleted_at IS NULL", phone).First(&user).Error
   if err != nil && err != gorm.ErrRecordNotFound {
     return false, err
   }
@@ -39,15 +41,7 @@ func GetUserById(db *gorm.DB, id string) (*User, error)  {
   return &user, nil
 }
 
-func CreateUser(db *gorm.DB, data map[string]interface{}) error  {
-  user := User{
-    Name: data["name"].(string),
-    PassWord: data["password"].(string),
-    Age: data["age"].(int),
-    Email: data["email"].(string),
-    Phone: data["phone"].(string),
-    Status: "pending",
-  }
+func CreateUser(db *gorm.DB, user User) error  {
   if err := db.Create(&user).Error; err != nil {
     return err
   }

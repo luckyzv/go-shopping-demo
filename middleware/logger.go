@@ -9,8 +9,9 @@ import (
   "github.com/sirupsen/logrus"
   "os"
   "path"
-  "shopping/common"
+  "shopping/response"
   "shopping/config"
+  "shopping/lib"
   "shopping/util"
   "strconv"
   "time"
@@ -68,7 +69,7 @@ func initFile(fileName string) *os.File {
 
   src, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
   if err != nil {
-    util.FailOnError(err, "打开日志文件失败")
+    lib.FailOnError(err, "打开日志文件失败")
   }
   return src
 }
@@ -81,7 +82,7 @@ func rotateFile(fileName string) (*lfshook.LfsHook, *rotatelogs.RotateLogs) {
     rotatelogs.WithMaxAge(7 * 24 * time.Hour), // 最大保存时间（7天）
     rotatelogs.WithRotationTime(24 * time.Hour), // 按照天来分割
   )
-  util.FailOnError(err, "分割日志失败")
+  lib.FailOnError(err, "分割日志失败")
   writeMap := lfshook.WriterMap{
     logrus.InfoLevel: logWriter,
     logrus.FatalLevel: logWriter,
@@ -123,7 +124,7 @@ func LoggerFormat() func(c *gin.Context)  {
     // 请求结束
     responseBody := bodyLogWriter.body.String()
     if responseBody != "" {
-      res := common.ResponseBody{}
+      res := response.Body{}
       err := json.Unmarshal([]byte(responseBody), &res)
       if err == nil {
         responseCode = strconv.Itoa(res.Code)
@@ -139,6 +140,7 @@ func LoggerFormat() func(c *gin.Context)  {
     }
     clientIp := c.ClientIP()
     loggerClient.WithFields(logrus.Fields{
+      "RequestID": util.GetMd5String(strconv.Itoa(int(time.Now().Unix()))),
       "req_method": c.Request.Method,
       "req_uri": c.Request.RequestURI,
       "req_post_data": c.Request.PostForm.Encode(),
@@ -155,6 +157,6 @@ func LoggerFormat() func(c *gin.Context)  {
   }
 }
 
-func GetLogger() *logrus.Logger {
+func GetLogrusLogger() *logrus.Logger {
   return logger
 }

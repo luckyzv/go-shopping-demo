@@ -2,7 +2,7 @@ package router
 
 import (
   "github.com/gin-gonic/gin"
-  "shopping/common"
+  "shopping/response"
 )
 
 type FuncRouter func(engine *gin.Engine)
@@ -17,5 +17,5 @@ func Init(r *gin.Engine) {
   for _, funcRouter := range routers {
     funcRouter(r)
   }
-  r.NoRoute(common.NotFound)
+  r.NoRoute(response.NotFound)
 }
