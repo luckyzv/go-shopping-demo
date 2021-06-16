@@ -12,15 +12,19 @@ redis:
   db: 0
   sentinelMasterName: mymaster
   sentinelAddr:
-    - ":26379"
-    - ":26380"
-    - ":26381"
+    - :26379
+    - :26380
+    - :26381
 amqp:
   userName: admin
   password: admin
-  host: "localhost:5672/"
+  host: "localhost:5672"
 logger:
   filePath: "./logs"
   fileName: "api.log"
+jwt:
+  jwtKey: a_secret_key_zIv
+  issuer: ziv
+  subject: user_token
 server:
   port: 3002

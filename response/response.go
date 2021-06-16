@@ -25,8 +25,8 @@ type FailedResBody struct {
 //}
 
 
-func Response(c *gin.Context, code, errorCode int, data interface{})  {
-  c.JSON(code, SuccessResBody{
+func Response(c *gin.Context, errorCode int, data interface{})  {
+  c.JSON(http.StatusOK, SuccessResBody{
     Code: errorCode,
     Message: constant.GetMessage(errorCode),
     Data: data,
@@ -43,16 +43,16 @@ func NotFound(c *gin.Context)  {
   c.Abort()
 }
 
-//func FailedParamResponse(c *gin.Context, errorCode int)  {
-//  c.JSON(http.StatusUnauthorized, FailedResponseBody{
-//    Code: errorCode,
-//    Message: "参数验证失败",
-//    Url: c.Request.URL.Path,
-//  })
-//  c.Abort()
-//}
+func ClientFailedResponse(c *gin.Context, errorCode int)  {
+ c.JSON(http.StatusUnauthorized, FailedResBody{
+   Code: errorCode,
+   Message: constant.GetMessage(errorCode),
+   Url: c.Request.URL.Path,
+ })
+ c.Abort()
+}
 
-func FailedResponse(c *gin.Context, errCode int) {
+func ServerFailedResponse(c *gin.Context, errCode int) {
   c.JSON(http.StatusInternalServerError, FailedResBody{
     Code: errCode,
     Message: constant.GetMessage(errCode),

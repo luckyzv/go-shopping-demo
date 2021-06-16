@@ -14,6 +14,7 @@ type Config struct {
   Server ServerConfig `mapstructure:"server"`
   Amqp AmqpConfig `mapstructure:"amqp"`
   Logger LoggerConfig `mapstructure:"logger"`
+  Jwt JwtConfig `mapstructure:"jwt"`
 }
 
 type MysqlConfig struct {
@@ -45,6 +46,12 @@ type LoggerConfig struct {
 
 type ServerConfig struct {
   Port string `json:"port"`
+}
+
+type JwtConfig struct {
+  JwtKey string `json:"jwtKey"`
+  Issuer string `json:"issuer"`
+  Subject string `json:"subject"`
 }
 
 var viperConfig Config
@@ -96,4 +103,8 @@ func GetAmqpConfig() AmqpConfig {
 
 func GetLoggerConfig() LoggerConfig {
   return viperConfig.Logger
+}
+
+func GetJwtConfig() JwtConfig {
+  return viperConfig.Jwt
 }

@@ -5,13 +5,16 @@ var MessageFlags = map[int]string{
   SUCCESS: "success",
   ERROR: "fail",
 
-  Error_RequiredParamFail: "必传参数为空",
+  ErrorRequiredParamFail: "必传参数为空",
 
   // 用户相关错误
-
-  Error_AuthCheckTokenFail: "Token鉴权失败",
-  Error_MysqlCreateUserError: "创建失败",
-  Error_UserExistedFail: "该用户已经存在",
+  ErrorHashedPasswordFail:     "密码加密失败",
+  ErrorPasswordCheckFail: "密码输入错误",
+  ErrorTokenCheckFail:   "Token认证失败",
+  ErrorTokenReleaseFail: "Token发放失败",
+  ErrorCreateUserFail: "创建用户失败",
+  ErrorUserNonExisted:      "该用户不存在",
+  ErrorUserExisted: "该用户已经存在",
   // 产品相关错误
 
 

@@ -3,15 +3,16 @@ package middleware
 import (
   "bytes"
   "encoding/json"
+  "fmt"
   "github.com/gin-gonic/gin"
   rotatelogs "github.com/lestrrat-go/file-rotatelogs"
   "github.com/rifflock/lfshook"
   "github.com/sirupsen/logrus"
   "os"
   "path"
-  "shopping/response"
+  "shopping/common"
   "shopping/config"
-  "shopping/lib"
+  "shopping/response"
   "shopping/util"
   "strconv"
   "time"
@@ -69,7 +70,7 @@ func initFile(fileName string) *os.File {
 
   src, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
   if err != nil {
-    lib.FailOnError(err, "打开日志文件失败")
+    common.FailOnError(err, "打开日志文件失败")
   }
   return src
 }
@@ -82,7 +83,7 @@ func rotateFile(fileName string) (*lfshook.LfsHook, *rotatelogs.RotateLogs) {
     rotatelogs.WithMaxAge(7 * 24 * time.Hour), // 最大保存时间（7天）
     rotatelogs.WithRotationTime(24 * time.Hour), // 按照天来分割
   )
-  lib.FailOnError(err, "分割日志失败")
+  common.FailOnError(err, "分割日志失败")
   writeMap := lfshook.WriterMap{
     logrus.InfoLevel: logWriter,
     logrus.FatalLevel: logWriter,
@@ -98,10 +99,10 @@ func rotateFile(fileName string) (*lfshook.LfsHook, *rotatelogs.RotateLogs) {
 }
 
 func LoggerToFile() gin.HandlerFunc {
-  return LoggerFormat()
+  return loggerFormat()
 }
 
-func LoggerFormat() func(c *gin.Context)  {
+func loggerFormat() func(c *gin.Context)  {
   loggerClient := Logger()
   logger = loggerClient
 
@@ -124,7 +125,7 @@ func LoggerFormat() func(c *gin.Context)  {
     // 请求结束
     responseBody := bodyLogWriter.body.String()
     if responseBody != "" {
-      res := response.Body{}
+      res := response.SuccessResBody{}
       err := json.Unmarshal([]byte(responseBody), &res)
       if err == nil {
         responseCode = strconv.Itoa(res.Code)
@@ -135,7 +136,10 @@ func LoggerFormat() func(c *gin.Context)  {
 
     // 结束时间
     endTime := time.Now()
+    // TODO 请求体加载
+    var reqPostData map[string]interface{}
     if c.Request.Method == "POST" {
+      fmt.Println()
       c.Request.ParseForm()
     }
     clientIp := c.ClientIP()
@@ -143,7 +147,7 @@ func LoggerFormat() func(c *gin.Context)  {
       "RequestID": util.GetMd5String(strconv.Itoa(int(time.Now().Unix()))),
       "req_method": c.Request.Method,
       "req_uri": c.Request.RequestURI,
-      "req_post_data": c.Request.PostForm.Encode(),
+      "req_post_data": reqPostData,
       //"req_user_agent": c.Request.UserAgent(),
       "req_client_ip": clientIp,
 

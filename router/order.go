@@ -2,7 +2,7 @@ package router
 
 import (
   "github.com/gin-gonic/gin"
-  "shopping/controller"
+	"shopping/src/controller"
 )
 
 func OrderRouters(e *gin.Engine)  {
