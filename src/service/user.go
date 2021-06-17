@@ -4,7 +4,6 @@ import (
   "github.com/gin-gonic/gin"
   "gorm.io/gorm"
   "shopping/common"
-  "shopping/middleware"
   "shopping/model"
   "shopping/response"
   "shopping/response/constant"
@@ -24,7 +23,7 @@ func UserLogin(c *gin.Context, user model.User) {
   token, err := common.ReleaseToken(user)
   if err != nil {
     response.ServerFailedResponse(c, constant.ErrorTokenReleaseFail)
-    middleware.Logger().Error("服务器内部异常：", err)
+    common.Logger("service", "UserLogin", constant.ErrorTokenReleaseFail, err)
     return
   }
 

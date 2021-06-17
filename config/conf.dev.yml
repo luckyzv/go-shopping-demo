@@ -20,8 +20,8 @@ amqp:
   password: admin
   host: "localhost:5672"
 logger:
-  filePath: "./logs"
-  fileName: "api.log"
+  AppFilePath: "./logs/app"
+  ApiFilePath: "./logs/api"
 jwt:
   jwtKey: a_secret_key_zIv
   issuer: ziv

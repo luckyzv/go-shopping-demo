@@ -40,8 +40,8 @@ type AmqpConfig struct {
 }
 
 type LoggerConfig struct {
-  FilePath string `json:"filePath"`
-  FileName string `json:"fileName"`
+  AppFilePath string `json:"AppFilePath"`
+  ApiFilePath string `json:"ApiFilePath"`
 }
 
 type ServerConfig struct {

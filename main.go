@@ -2,7 +2,6 @@ package main
 
 import (
   "github.com/gin-gonic/gin"
-  "os"
   "shopping/config"
   _ "shopping/engine"
   "shopping/middleware"
@@ -11,11 +10,12 @@ import (
 
 func main() {
   r := gin.Default()
-  envName := os.Getenv("ENV")
-  if envName == "Staging" || envName == "Prod" {
-    r.Use(middleware.LoggerToFile())
-  }
-  r.Use(middleware.LoggerToFile())
+
+  //envName := os.Getenv("ENV")
+  //if envName == "Staging" || envName == "Prod" {
+  //  r.Use(middleware.LoggerToFile())
+  //}
+  r.Use(middleware.Logger())
   router.Init(r)
 
   //var wg sync.WaitGroup
