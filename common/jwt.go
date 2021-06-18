@@ -9,6 +9,7 @@ import (
 
 type Claims struct {
   UserId uint
+  UserName string
   jwt.StandardClaims
 }
 
@@ -18,6 +19,7 @@ func ReleaseToken(user model.User) (string, error)  {
   expiration := time.Now().Add(1 * 24 * time.Hour) // 一天
   claims := &Claims{
     UserId: user.ID,
+    UserName: user.Name,
     StandardClaims: jwt.StandardClaims{
       ExpiresAt: expiration.Unix(),
       IssuedAt: time.Now().Unix(),
@@ -34,13 +36,17 @@ func ReleaseToken(user model.User) (string, error)  {
   return tokenStr, nil
 }
 
-func ParseToken(tokenStr string) (*jwt.Token, *Claims, error) {
+func ParseToken(tokenStr string) (*Claims, error) {
   jwtConfig := GetJwtConfig()
-  claims := &Claims{}
-  token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+  tokenClaims, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
     return jwtConfig.JwtKey, nil
   })
-  return token, claims, err
+  if tokenClaims != nil {
+    if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
+      return claims, nil
+    }
+  }
+  return nil, err
 }
 
 func GetJwtConfig() config.JwtConfig  {

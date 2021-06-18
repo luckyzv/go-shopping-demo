@@ -13,7 +13,7 @@ func Includes(funcRouters ...FuncRouter)  {
 }
 
 func Init(r *gin.Engine) {
-  Includes(OrderRouters, UserRouters, ProductRouters)
+  Includes(OrderRouters, UserRouters, ProductRouters, AdminRouters)
   for _, funcRouter := range routers {
     funcRouter(r)
   }

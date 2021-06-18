@@ -4,14 +4,16 @@ const (
   SUCCESS = 0
   ERROR = 1
 
-  ErrorRequiredParamFail   = 400001
-  ErrorUserExisted  = 400002
-  ErrorUserNonExisted     = 400003
-  ErrorPasswordCheckFail = 401001
-  ErrorTokenCheckFail = 403001
+  ErrorRequiredParamFail   = 40001
+  ErrorUserExisted  = 40002
+  ErrorUserNonExisted     = 40003
+  ErrorRequiredHeaderFail   = 40004
+  ErrorTokenTimeOut   = 40005
+  ErrorPasswordCheckFail = 40101
+  ErrorTokenCheckFail = 40301
 
-  ErrorCreateUserFail = 500001
-  ErrorHashedPasswordFail = 500002
-  ErrorTokenReleaseFail = 500003
+  ErrorCreateUserFail = 50001
+  ErrorHashedPasswordFail = 50002
+  ErrorTokenReleaseFail = 50003
 
 )

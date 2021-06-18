@@ -91,7 +91,7 @@ func loggerFormat() func(c *gin.Context)  {
       "res_message": responseMsg,
       "res_data": responseData,
 
-      "operation_time": strconv.Itoa(int(endTime.Sub(startTime).Milliseconds())) + "ms",
+      "latency": strconv.Itoa(int(endTime.Sub(startTime).Milliseconds())) + "ms",
     }).Info("请求已响应")
   }
 }
