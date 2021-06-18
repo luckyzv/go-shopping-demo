@@ -6,6 +6,8 @@ import (
 )
 
 func OrderRouters(e *gin.Engine)  {
+  c := &controller.OrderController{}
   order := e.Group("/api/v1/orders")
-  order.GET("/hello", controller.UserRegister)
+
+  order.GET("/hello", c.CreateOrder)
 }

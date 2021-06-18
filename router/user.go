@@ -6,7 +6,9 @@ import (
 )
 
 func UserRouters(e *gin.Engine)  {
+  c := &controller.UserController{}
   user := e.Group("/api/v1/users")
-  user.POST("/register", controller.UserRegister) // 用户注册
-  user.POST("/login", controller.UserLogin)       // 用户登录
+
+  user.POST("/register", c.UserRegister) // 用户注册
+  user.POST("/login", c.UserLogin)       // 用户登录
 }

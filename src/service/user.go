@@ -10,22 +10,22 @@ import (
   "shopping/src/dto"
 )
 
-func UserRegister(c *gin.Context, db *gorm.DB, user model.User)  {
+func UserRegister(ctx *gin.Context, db *gorm.DB, user model.User)  {
   err := model.CreateUser(db, user)
   if err != nil {
-    response.ServerFailedResponse(c, constant.ErrorCreateUserFail)
+    response.ServerFailedResponse(ctx , constant.ErrorCreateUserFail)
     return
   }
-  response.Response(c, constant.SUCCESS, nil)
+  response.Response(ctx , constant.SUCCESS, nil)
 }
 
-func UserLogin(c *gin.Context, user model.User) {
+func UserLogin(ctx *gin.Context, user model.User) {
   token, err := common.ReleaseToken(user)
   if err != nil {
-    response.ServerFailedResponse(c, constant.ErrorTokenReleaseFail)
+    response.ServerFailedResponse(ctx , constant.ErrorTokenReleaseFail)
     common.Logger("service", "UserLogin", constant.ErrorTokenReleaseFail, err)
     return
   }
 
-  response.Response(c, constant.SUCCESS, dto.UserInfo(user, token))
+  response.Response(ctx , constant.SUCCESS, dto.UserInfo(user, token))
 }

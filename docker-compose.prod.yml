@@ -7,4 +7,5 @@ services:
     container_name: go-shopping
     environment:
       ENV: prod
+      NOT_SHOWN_API_DOC: true
 networks:
