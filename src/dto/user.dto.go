@@ -21,7 +21,7 @@ type UserLoginDto struct {
   Password string `json:"password" binding:"required"`
 }
 
-func UserInfo(user model.User, token string) UserDto {
+func UserLoginResponseDto(user model.User, token string) UserDto {
   return UserDto{
     Id: user.ID,
     Name: user.Name,

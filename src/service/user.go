@@ -27,5 +27,5 @@ func UserLogin(ctx *gin.Context, user model.User) {
     return
   }
 
-  response.Response(ctx , constant.SUCCESS, dto.UserInfo(user, token))
+  response.Response(ctx , constant.SUCCESS, dto.UserLoginResponseDto(user, token))
 }

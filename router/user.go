@@ -14,5 +14,5 @@ func UserRouters(e *gin.Engine)  {
   user.POST("/login", c.UserLogin)       // 用户登录
 
   user.Use(middleware.Auth())
-  user.GET("/info", c.UserInfo)
+  user.GET("/info", c.UserInfo) // 用户个人信息
 }
