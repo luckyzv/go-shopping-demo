@@ -32,7 +32,7 @@ func GetUsers()  {
 
 }
 
-func GetUserById(db *gorm.DB, id string) (*User, error)  {
+func GetUserById(db *gorm.DB, id uint) (*User, error)  {
   var user User
   err := db.Where("id = ? AND deleted_at IS NULL", id).First(&user).Error
   if err != nil && err != gorm.ErrRecordNotFound {

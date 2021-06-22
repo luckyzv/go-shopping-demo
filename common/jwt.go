@@ -38,8 +38,9 @@ func ReleaseToken(user model.User) (string, error)  {
 
 func ParseToken(tokenStr string) (*Claims, error) {
   jwtConfig := GetJwtConfig()
+
   tokenClaims, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-    return jwtConfig.JwtKey, nil
+    return []byte(jwtConfig.JwtKey), nil
   })
   if tokenClaims != nil {
     if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {

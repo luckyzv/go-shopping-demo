@@ -18,7 +18,7 @@ func Auth() gin.HandlerFunc {
       return
     }
 
-    claims, err := common.ParseToken(token)
+    claims, err := common.ParseToken(token[len(prefix):])
     if err != nil {
       switch err.(*jwt.ValidationError).Errors {
       case jwt.ValidationErrorExpired:

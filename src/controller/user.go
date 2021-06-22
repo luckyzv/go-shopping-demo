@@ -79,3 +79,15 @@ func (c *UserController) UserLogin(ctx *gin.Context) {
   }
   service.UserLogin(ctx, *dbUser)
 }
+
+func (c *UserController) UserInfo(ctx *gin.Context)  {
+  db := engine.GetMysqlClient()
+  userId, _ := ctx.Get("userId")
+  user, err := model.GetUserById(db, userId.(uint))
+  if err != nil {
+    response.ClientFailedResponse(ctx, constant.ErrorUserNonExisted)
+    return
+  }
+
+  response.Response(ctx, constant.SUCCESS, dto.ConvertModelUserToDto(*user))
+}

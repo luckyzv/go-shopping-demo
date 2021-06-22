@@ -2,6 +2,7 @@ package router
 
 import (
   "github.com/gin-gonic/gin"
+  "shopping/middleware"
   "shopping/src/controller"
 )
 
@@ -11,4 +12,7 @@ func UserRouters(e *gin.Engine)  {
 
   user.POST("/register", c.UserRegister) // 用户注册
   user.POST("/login", c.UserLogin)       // 用户登录
+
+  user.Use(middleware.Auth())
+  user.GET("/info", c.UserInfo)
 }
