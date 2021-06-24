@@ -1,11 +1,27 @@
 version: 3
 services:
-  go-shopping:
-    build: ./main
+  go-shopping-demo:
+    container_name: go-shopping-prod
+    image: registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:0.0.1
     ports:
     - "3002:3002"
-    container_name: go-shopping
     environment:
       ENV: prod
       NOT_SHOWN_API_DOC: true
+    command: ./go-shopping-demo
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+  mysql:
+    container_name: mysql-prod
+    image: mysql:8.0.14
+    ports:
+    - "3306:3306"
+    environment:
+      DB_USER: ziv
+      DB_PASSWORD: ziv
+      DB: go_shopping
+    volumes:
+    -
 networks:
