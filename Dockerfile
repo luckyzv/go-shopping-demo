@@ -1,4 +1,4 @@
-FROM golang:1.16.2-alpine as build
+FROM golang:1.16.2-alpine
 
 MAINTAINER luckyziv
 
@@ -14,11 +14,11 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o ./out/ .
+RUN go build -o ./out .
 
 EXPOSE 3002
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN echo "Asia/Shanghai" > /etc/timezone
 
-CMD ["./out"]
+ENTRYPOINT ["./out"]
