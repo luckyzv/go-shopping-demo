@@ -9,6 +9,8 @@ run:
 login:
 	sh ./docker-login.sh
 
+build-redis:
+
 docker-build: login
 	@docker build -t registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:${Version} .
 

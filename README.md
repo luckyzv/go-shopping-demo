@@ -17,3 +17,12 @@
 [] consul 服务注册与发现
 [] 测试
 [] ci/cd
+
+
+### Deploy
+
+1. cd docker/redis && docker-compose up -d
+
+2. cd ../sentinel && docker-compose up -d
+
+3. cd ../.. && docker-compose up -d

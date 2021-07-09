@@ -1,0 +1,20 @@
+version: '3'
+services:
+  master:
+    image: redis
+    container_name: redis-master
+    command: redis-server --requirepass ziv --masterauth ziv
+    ports:
+    - 6479:6379
+  slave1:
+    image: redis
+    container_name: redis-slave-1
+    command: redis-server --slaveof redis-master 6379 --requirepass ziv --masterauth ziv
+    ports:
+    - 6480:6379
+  slave2:
+    image: redis
+    container_name: redis-slave-2
+    command: redis-server --slaveof redis-master 6379 --requirepass ziv --masterauth ziv
+    ports:
+    - 6481:6379
