@@ -1,8 +1,8 @@
-version: 3
+version: '3'
 services:
   go-shopping-demo:
     container_name: go-shopping-prod
-    image: registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:0.0.1
+    image: registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:prod
     ports:
     - "3002:3002"
     environment:

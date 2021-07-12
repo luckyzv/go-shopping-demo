@@ -3,8 +3,31 @@ version: 0.0.1
 mysql:
   userName: root
   pass: ziv
-  host: localhost
-  prot: 3306
-  dbName: shopping
+  host: mysql-staging
+  port: 3306
+  dbName: go_shopping
+redis:
+  addr: "redis:6379"
+  password: ziv
+  db: 0
+  sentinelMasterName: mymaster
+  sentinelAddr:
+    - :26479
+    - :26480
+    - :26481
+amqp:
+  userName: admin
+  password: admin
+  host: "rabbitmq-staging:5672"
+elasticsearch:
+  host: elasticsearch-staging
+  port: 9200
+logger:
+  AppFilePath: "./logs/app"
+  ApiFilePath: "./logs/api"
+jwt:
+  jwtKey: a_secret_key_zIv
+  issuer: ziv
+  subject: user_token
 server:
   port: 3002

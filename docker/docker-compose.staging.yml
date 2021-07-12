@@ -1,0 +1,63 @@
+version: '3'
+services:
+  go-shopping-demo:
+    container_name: go-shopping-staging
+    image: registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:0.0.3
+    ports:
+      - "3003:3002"
+    environment:
+      ENV: staging
+    command: ../out
+    depends_on:
+      - mysql
+      - sentinel1
+      - sentinel2
+      - sentinel3
+      - rabbitmq
+  mysql:
+    container_name: mysql-staging
+    image: mysql:8.0.25
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ziv
+      - MYSQL_USER=ziv
+      - MYSQL_PASSWORD=ziv
+      - MYSQL_DATABASE=go_shopping
+    volumes:
+      - ../mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+  rabbitmq:
+    image: rabbitmq:3.8.16-management
+    container_name: rabbitmq-staging
+    hostname: rabbitmq
+    restart: always
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    volumes:
+    - ../rabbitmq_data:/var/lib/rabbitmq
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    container_name: elasticsearch-staging
+    hostname: elasticsearch
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - discovery.type=singole-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: always
+    ports:
+    - "9201:9200"
+    - "9301:9300"
+networks:
+  default:
+    external:
+      name: go-shopping

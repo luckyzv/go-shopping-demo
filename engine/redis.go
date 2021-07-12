@@ -1,6 +1,7 @@
 package engine
 
 import (
+  "context"
   "github.com/go-redis/redis/v8"
   "shopping/config"
 )
@@ -26,5 +27,9 @@ func init()  {
 }
 
 func GetRedisClient() *redis.Client {
+  err := redisClient.Set(context.Background(), "ping","pong", 0).Err()
+  if err != nil {
+    panic(err)
+  }
   return redisClient
 }

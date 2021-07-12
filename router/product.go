@@ -9,5 +9,5 @@ func ProductRouters(e *gin.Engine)  {
   c := &controller.ProductController{}
   product := e.Group("/api/v1/products")
 
-  product.GET("/hello", c.AddProduct)
+  product.GET("/product", c.AddProduct)
 }

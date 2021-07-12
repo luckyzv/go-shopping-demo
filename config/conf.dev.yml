@@ -19,6 +19,9 @@ amqp:
   userName: admin
   password: admin
   host: "localhost:5672"
+elasticsearch:
+  host: localhost
+  port: 9200
 logger:
   AppFilePath: "./logs/app"
   ApiFilePath: "./logs/api"

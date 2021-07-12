@@ -1,4 +1,6 @@
 .idea
+./docker/mysql_data
+./docker/rabbitmq_data
 logs
 docs
 out
