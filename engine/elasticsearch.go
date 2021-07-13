@@ -13,9 +13,7 @@ var esClient *elastic.Client
 
 func init()  {
   esConfig := config.GetElasticSearchConfig()
-  fmt.Println("es: ", esConfig)
   url := fmt.Sprintf("http://%s:%s", esConfig.Host, esConfig.Port)
-  fmt.Printf("ES的url是: %s\n", url)
 
   client, err := elastic.NewClient(
     elastic.SetURL(url),

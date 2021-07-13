@@ -1,3 +1,4 @@
+# 下面的host参数均为docker-compose.yml中的hostname
 env: dev
 version: 0.0.1
 mysql:
@@ -12,15 +13,15 @@ redis:
   db: 0
   sentinelMasterName: mymaster
   sentinelAddr:
-    - :26479
-    - :26480
-    - :26481
+    - "redis-sentinel-1:26379"
+    - "redis-sentinel-1:26480"
+    - "redis-sentinel-1:26481"
 amqp:
   userName: admin
   password: admin
-  host: "rabbitmq-staging:5672"
+  host: "rabbitmq:5672"
 elasticsearch:
-  host: elasticsearch-staging
+  host: elasticsearch
   port: 9200
 logger:
   AppFilePath: "./logs/app"

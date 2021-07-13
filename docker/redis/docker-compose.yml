@@ -18,7 +18,3 @@ services:
     command: redis-server --slaveof redis-master 6379 --requirepass ziv --masterauth ziv
     ports:
     - 6481:6379
-networks:
-  default:
-    external:
-      name: go-shopping

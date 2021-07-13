@@ -7,7 +7,7 @@ services:
       - "26479:26379"
     command: redis-server /usr/local/etc/redis/sentinel.conf --sentinel
     volumes:
-      - ./sentinel/sentinel1.conf:/usr/local/etc/redis/sentinel.conf
+      - ./sentinel1.conf:/usr/local/etc/redis/sentinel.conf
   sentinel2:
     image: redis
     container_name: redis-sentinel-2
@@ -15,7 +15,7 @@ services:
       - "26480:26379"
     command: redis-server /usr/local/etc/redis/sentinel.conf --sentinel
     volumes:
-      - ./sentinel/sentinel2.conf:/usr/local/etc/redis/sentinel.conf
+      - ./sentinel2.conf:/usr/local/etc/redis/sentinel.conf
   sentinel3:
     image: redis
     container_name: redis-sentinel-3
@@ -23,8 +23,8 @@ services:
       - "26481:26379"
     command: redis-server /usr/local/etc/redis/sentinel.conf --sentinel
     volumes:
-      - ./sentinel/sentinel3.conf:/usr/local/etc/redis/sentinel.conf
+      - ./sentinel3.conf:/usr/local/etc/redis/sentinel.conf
 networks:
   default:
     external:
-      name: go-shopping
+      name: redis_default

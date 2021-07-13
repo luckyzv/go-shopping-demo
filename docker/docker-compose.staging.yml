@@ -2,7 +2,7 @@ version: '3'
 services:
   go-shopping-demo:
     container_name: go-shopping-staging
-    image: registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:0.0.3
+    image: registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:0.0.6
     ports:
       - "3003:3002"
     environment:
@@ -10,10 +10,8 @@ services:
     command: ../out
     depends_on:
       - mysql
-      - sentinel1
-      - sentinel2
-      - sentinel3
       - rabbitmq
+      - elasticsearch
   mysql:
     container_name: mysql-staging
     image: mysql:8.0.25
@@ -48,7 +46,7 @@ services:
     environment:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
-      - discovery.type=singole-node
+      - discovery.type=single-node
     ulimits:
       memlock:
         soft: -1
@@ -57,7 +55,9 @@ services:
     ports:
     - "9201:9200"
     - "9301:9300"
+    volumes:
+    - ../elasticsearch_data:/usr/share/elasticsearch/data
 networks:
   default:
     external:
-      name: go-shopping
+      name: redis_default

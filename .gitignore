@@ -1,6 +1,10 @@
 .idea
 ./docker/mysql_data
 ./docker/rabbitmq_data
+./docker/elasticsearch_data
+mysql_data
+rabbitmq_data
+elasticsearch_data
 logs
 docs
 out
