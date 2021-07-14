@@ -3,10 +3,13 @@ package dto
 import (
   "gorm.io/gorm"
   "shopping/model"
+  "time"
 )
 
 type UserDto struct {
   Id uint `json:"id"`
+  CreatedAt time.Time `json:"createdAt"`
+  DeletedAt time.Time `json:"deletedAt"`
   Name string  `json:"name"`
   Age int `json:"age"`
   Email string `json:"email"`
@@ -21,9 +24,16 @@ type UserLoginDto struct {
   Password string `json:"password" binding:"required"`
 }
 
+type GetAllUsersDto struct {
+  Status string `json:"status"`
+  PageSize int `json:"pageSize" binding:"required"`
+  PageNum int `json:"pageNum" binding:"required"`
+}
+
 func UserLoginResponseDto(user model.User, token string) UserDto {
   return UserDto{
     Id: user.ID,
+    CreatedAt: user.CreatedAt,
     Name: user.Name,
     Phone: user.Phone,
     Age: user.Age,
@@ -38,6 +48,7 @@ func ConvertUserDtoToModel(userDto UserDto) model.User  {
   return model.User{
     Model:     gorm.Model{
       ID: userDto.Id,
+      CreatedAt: userDto.CreatedAt,
     },
     Name:      userDto.Name,
     Age:       userDto.Age,
@@ -51,6 +62,7 @@ func ConvertUserDtoToModel(userDto UserDto) model.User  {
 func ConvertModelUserToDto(user model.User) UserDto  {
   return UserDto{
     Id: user.ID,
+    CreatedAt: user.CreatedAt,
     Name:      user.Name,
     Age:       user.Age,
     Email:     user.Email,

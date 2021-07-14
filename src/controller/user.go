@@ -3,6 +3,7 @@ package controller
 import (
   "github.com/gin-gonic/gin"
   "golang.org/x/crypto/bcrypt"
+  "shopping/common"
   "shopping/engine"
   "shopping/model"
   "shopping/response"
@@ -12,9 +13,9 @@ import (
   "shopping/util"
 )
 
-type UserController struct {
+type UserController struct {}
 
-}
+var userService = &service.UserService{}
 
 // UserRegister @用户注册
 // @Tags Users
@@ -23,7 +24,8 @@ type UserController struct {
 // @Produce json
 // @Param phone body string  true "注册手机号"
 // @Param password body string  true "用户密码"
-// @Success 200 {string} string "ok"
+// @Success 200 {object} response.SuccessResBody "ok"
+// @Failure 500 {object} response.FailedResBody "internal server error"
 // @Router /users/register [post]
 func (c *UserController) UserRegister(ctx *gin.Context) {
   db := engine.GetMysqlClient()
@@ -35,7 +37,7 @@ func (c *UserController) UserRegister(ctx *gin.Context) {
   }
 
   // 手机号已被注册
-  existed, _ := model.ExistUserByPhone(db, user.Phone)
+  existed, _ := model.UserIsExistedByPhone(db, user.Phone)
   if existed {
     response.ClientFailedResponse(ctx, constant.ErrorUserExisted)
     return
@@ -43,19 +45,28 @@ func (c *UserController) UserRegister(ctx *gin.Context) {
   // 加密password
   hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
   if err != nil {
-    response.ServerFailedResponse(ctx, constant.ErrorHashedPasswordFail)
+    response.ServerFailedResponse(ctx, constant.ErrorUserHashedPasswordFail)
     return
   }
   // 生成用户
   randomNameByteLength := 8
-  service.UserRegister(ctx, db, model.User{
+  userService.UserRegister(ctx, db, model.User{
     Name: util.GetRandomString(randomNameByteLength),
     PassWord: string(hashedPassword),
     Phone: user.Phone,
   })
 }
 
-// UserLogin 用户登录
+// UserLogin @用户登录
+// @Tags Users
+// @Description 用户登录
+// @Accept json
+// @Produce json
+// @Param phone body string true "手机号"
+// @Param password body string true "密码"
+// @Success 200 {object} response.SuccessResBody "ok"
+// @Failure 500 {object} response.FailedResBody "internal server error"
+// @Router /users/login [post]
 func (c *UserController) UserLogin(ctx *gin.Context) {
   db := engine.GetMysqlClient()
 
@@ -66,7 +77,7 @@ func (c *UserController) UserLogin(ctx *gin.Context) {
   }
 
   // 该手机号不存在
-  isExisted, dbUser := model.GetUserByPhone(db, user.Phone)
+  isExisted, dbUser := model.UserGetOneByPhone(db, user.Phone)
   if !isExisted {
     response.ClientFailedResponse(ctx, constant.ErrorUserNonExisted)
     return
@@ -74,20 +85,39 @@ func (c *UserController) UserLogin(ctx *gin.Context) {
   // 比对密码失败
   err := bcrypt.CompareHashAndPassword([]byte(dbUser.PassWord), []byte(user.Password))
   if err != nil {
-    response.ClientFailedResponse(ctx, constant.ErrorPasswordCheckFail)
+    response.ClientFailedResponse(ctx, constant.ErrorUserPasswordCheckFail)
     return
   }
-  service.UserLogin(ctx, *dbUser)
+  userService.UserLogin(ctx, *dbUser)
 }
 
 func (c *UserController) UserInfo(ctx *gin.Context)  {
   db := engine.GetMysqlClient()
   userId, _ := ctx.Get("userId")
-  user, err := model.GetUserById(db, userId.(uint))
+  user, err := model.UserGetOneById(db, userId.(uint))
   if err != nil {
     response.ClientFailedResponse(ctx, constant.ErrorUserNonExisted)
     return
   }
 
   response.Response(ctx, constant.SUCCESS, dto.ConvertModelUserToDto(*user))
+}
+
+func (c *UserController) GetUsers(ctx *gin.Context)  {
+  db := engine.GetMysqlClient()
+  var getAllUsersDto dto.GetAllUsersDto
+  err := ctx.ShouldBindJSON(&getAllUsersDto)
+  if err != nil {
+    response.ClientFailedResponse(ctx, constant.ErrorRequiredParamFail)
+    return
+  }
+
+  users, err := userService.GetAllUsers(db, getAllUsersDto)
+  if err != nil {
+    response.ServerFailedResponse(ctx , constant.ErrorUserFindFail)
+    common.Logger("UserService", "GetAllUsers", constant.ErrorUserFindFail, err)
+    return
+  }
+
+  response.Response(ctx, constant.SUCCESS, users)
 }

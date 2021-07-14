@@ -8,9 +8,9 @@ import (
 
 func AdminRouters(e *gin.Engine)  {
   c := &controller.AdminController{}
-  e.POST("/api/v1/admins/login", c.Login)
   admin := e.Group("/api/v1/admins")
-  admin.Use(middleware.Auth())
+  admin.POST("/login", c.Login)
 
-  admin.GET("/hello", c.CreateProduct)
+  admin.Use(middleware.Auth())
+  admin.GET("/users", c.GetALlUsers)
 }

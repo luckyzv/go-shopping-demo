@@ -53,8 +53,8 @@ services:
         hard: -1
     restart: always
     ports:
-    - "9201:9200"
-    - "9301:9300"
+    - "9200:9200"
+    - "9300:9300"
     volumes:
     - ../elasticsearch_data:/usr/share/elasticsearch/data
 networks:

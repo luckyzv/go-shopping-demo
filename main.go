@@ -24,7 +24,7 @@ func main() {
   //if envName == "Staging" || envName == "Prod" {
   //  r.Use(middleware.LoggerToFile())
   //}
-  
+
   // health check路由(consul使用)
   r.GET("/api/v1/Health", func(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{

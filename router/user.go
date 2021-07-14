@@ -15,4 +15,5 @@ func UserRouters(e *gin.Engine)  {
 
   user.Use(middleware.Auth())
   user.GET("/info", c.UserInfo) // 用户个人信息
+  user.GET("", c.GetUsers)
 }
