@@ -57,6 +57,13 @@ services:
     - "9300:9300"
     volumes:
     - ../elasticsearch_data:/usr/share/elasticsearch/data
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    container_name: kibana-staging
+    depends_on:
+      - elasticsearch
+    ports:
+    - "5601:5601"
 networks:
   default:
     external:
