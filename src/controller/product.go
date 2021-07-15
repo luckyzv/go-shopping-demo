@@ -29,12 +29,16 @@ func (c *ProductController) AddProduct(ctx *gin.Context)  {
     return
   }
 
-  productService.AddNewProduct(ctx, db, model.Product{
+  product := model.Product{
     SkuId: newProductDto.SkuId,
     SkuName: newProductDto.SkuName,
     Price: newProductDto.Price,
     Stock: newProductDto.Stock,
-  })
+  }
+  if newProductDto.PromotionPrice > 0 {
+    product.PromotionPrice = newProductDto.PromotionPrice
+  }
+  productService.AddNewProduct(ctx, db, product)
 }
 
 func (c *ProductController) GetProduct(ctx *gin.Context)  {

@@ -21,6 +21,7 @@ var MessageFlags = map[int]string{
   // 产品相关错误
   ErrorProductSkuIdDuplicated: "SkuId已经存在",
   ErrorProductCreateProductFail: "创建产品失败",
+  ErrorProductPriceNotAllowed: "价格设置不合理",
   // 订单相关错误
 }
 

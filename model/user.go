@@ -9,7 +9,7 @@ type User struct {
 
   Name string  `json:"name" gorm:"size:16;not null,comment:用户姓名"`
   PassWord string `json:"password" gorm:"type:varchar(100);column:password;not null"`
-  Age int `json:"age" gorm:"type:tinyint;unsigned;default:0"`
+  Age int `json:"age" gorm:"type:TINYINT UNSIGNED NOT NULL;default:0"`
   Email string `json:"email" gorm:"type:varchar(30);not null;default:''"`
   Phone string  `json:"phone" gorm:"size:11;not null;uniqueIndex"`
   AvatarUrl string `json:"avatarUrl" gorm:"type:varchar(255);not null;default:''"`

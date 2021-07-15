@@ -8,8 +8,8 @@ type Product struct {
   SkuId string `json:"skuId" gorm:"size:11;not null;uniqueIndex"`
   SkuName string `json:"skuName" gorm:"type:varchar(255);not null"`
   Price float64 `json:"price" gorm:"not null"`
-  PromotionPrice float64 `json:"promotionPrice" gorm:"unsigned;comment:'促销价格'"`
-  Stock int `json:"stock" gorm:"unsigned;not null;comment:'库存'"`
+  PromotionPrice float64 `json:"promotionPrice" gorm:"default:-1;comment:'促销价格'"`
+  Stock int `json:"stock" gorm:"type:SMALLINT UNSIGNED not NULL;comment:'库存量'"`
   Status string `json:"status" gorm:"type:enum('published', 'pending', 'deleted');default:'pending';comment:'产品发布状态'"`
 }
 

@@ -88,7 +88,7 @@ func rotateFileAndNewHook(fileName string) (*lfshook.LfsHook, *rotatelogs.Rotate
   return lfHook, logWriter
 }
 
-// Logger 记录系统内部错误接口
+// Logger 记录系统内部错误接口 结合请求日志排查bug
 // @packageName 包名 @funcName 函数名 @errCode 内部错误码 @err 错误内容
 func Logger(packageName string, funcName string, errCode int, err error)  {
   appLogger().WithFields(logrus.Fields{

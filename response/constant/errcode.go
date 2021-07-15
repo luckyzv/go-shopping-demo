@@ -19,5 +19,6 @@ const (
   ErrorUserFindFail = 50004
 
   ErrorProductSkuIdDuplicated = 40006
+  ErrorProductPriceNotAllowed = 40007
   ErrorProductCreateProductFail = 50005
 )

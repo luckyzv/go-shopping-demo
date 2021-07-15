@@ -3,6 +3,7 @@ package service
 import (
   "github.com/gin-gonic/gin"
   "gorm.io/gorm"
+  "shopping/common"
   "shopping/model"
   "shopping/response"
   "shopping/response/constant"
@@ -19,7 +20,8 @@ type ProductService struct {
 func (productService *ProductService) AddNewProduct(ctx *gin.Context, db *gorm.DB, product model.Product)  {
   err := model.ProductAddNew(db, product)
   if err != nil {
-    response.ServerFailedResponse(ctx , constant.ErrorProductCreateProductFail)
+    response.ServerFailedResponse(ctx, constant.ErrorProductCreateProductFail)
+    common.Logger("ProductService","AddNewProduct", constant.ErrorProductCreateProductFail, err)
     return
   }
   response.Response(ctx , constant.SUCCESS, nil)
