@@ -20,6 +20,13 @@ amqp:
   userName: admin
   password: admin
   host: "rabbitmq:5672"
+amqpkey:
+  orderDlxExchange: dlx_exchange
+  orderDlxQueue: dlx_queue
+  orderDlxRoutingKey: orders_auto_cancel
+  orderExchange: orders_normal
+  orderQueue: orders_queue
+  orderRoutingKey: orders
 elasticsearch:
   host: elasticsearch
   port: 9200

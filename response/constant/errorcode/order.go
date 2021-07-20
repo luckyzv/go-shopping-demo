@@ -5,4 +5,5 @@ const (
   ErrorOrderTotalPriceWrong = "040002"
 
   ErrorOrderAddNew = "050001"
+  ErrorOrderUpdate = "050002"
 )

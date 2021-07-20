@@ -10,4 +10,5 @@ func ProductRouters(e *gin.Engine)  {
   product := e.Group("/api/v1/products")
 
   product.POST("", c.AddNewProduct)
+  product.GET("/:productId", c.GetProduct)
 }

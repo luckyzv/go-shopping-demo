@@ -45,3 +45,10 @@ func ProductGetAll(db *gorm.DB, ids []uint) ([]Product, int64)  {
 
   return products, result.RowsAffected
 }
+
+func ProductGetOne(db *gorm.DB, id int) Product  {
+  var product Product
+  db.Select([]string{"id", "sku_id", "sku_name", "price", "promotion_price", "stock", "status"}).Where("id = ?", id).Find(&product)
+
+  return product
+}

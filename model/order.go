@@ -49,3 +49,12 @@ func OrderGetAll(db *gorm.DB, ids []int) ([]Order, int64)  {
 
   return orders, result.RowsAffected
 }
+
+func OrderUpdateStatus(db *gorm.DB, orderId string) error  {
+  err := db.Model(&Order{}).Where("order_id = ?", orderId).Update("status", "canceled").Error
+  if err != nil {
+    return err
+  }
+
+  return nil
+}

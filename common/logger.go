@@ -1,6 +1,7 @@
 package common
 
 import (
+  "fmt"
   rotatelogs "github.com/lestrrat-go/file-rotatelogs"
   "github.com/rifflock/lfshook"
   "github.com/sirupsen/logrus"
@@ -96,4 +97,10 @@ func Logger(packageName string, funcName string, errCode string, err error)  {
     "funcName": funcName,
     "innerErrCode": errCode,
   }).Errorf("系统内部错误：【%v】", err)
+}
+
+func FailOnError(err error, msg string)  {
+  if err != nil {
+    panic(fmt.Errorf("%s, err: %s \n", msg, err))
+  }
 }

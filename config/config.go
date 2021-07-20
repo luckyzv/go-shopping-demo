@@ -16,6 +16,7 @@ type Config struct {
   Logger LoggerConfig `mapstructure:"logger"`
   Jwt JwtConfig `mapstructure:"jwt"`
   Es EsConfig `mapstructure:"elasticsearch"`
+  AmqpKey AmqpKeyConfig `mapstructure:"amqpkey"`
 }
 
 type MysqlConfig struct {
@@ -38,6 +39,15 @@ type AmqpConfig struct {
   UserName string  `json:"userName"`
   Password string `json:"password"`
   Host string  `json:"host"`
+}
+
+type AmqpKeyConfig struct {
+  OrderDlxExchange string `json:"OrderDlxExchange"`
+  OrderDlxQueue string `json:"OrderDlxQueue"`
+  OrderDlxRoutingKey string `json:"OrderDlxRoutingKey"`
+  OrderExchange string `json:"OrderExchange"`
+  OrderQueue string `json:"OrderQueue"`
+  OrderRoutingKey string `json:"orderRoutingKey"`
 }
 
 type EsConfig struct {
@@ -117,4 +127,8 @@ func GetLoggerConfig() LoggerConfig {
 
 func GetJwtConfig() JwtConfig {
   return viperConfig.Jwt
+}
+
+func GetAmqpKeyConfig() AmqpKeyConfig {
+  return viperConfig.AmqpKey
 }

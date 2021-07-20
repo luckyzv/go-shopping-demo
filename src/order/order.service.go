@@ -1,8 +1,11 @@
 package order
 
 import (
+  "fmt"
   "github.com/gin-gonic/gin"
   "gorm.io/gorm"
+  "shopping/common"
+  "shopping/engine"
   "shopping/model"
   "shopping/response"
   "shopping/response/constant/errorcode"
@@ -57,7 +60,20 @@ func (orderService Service) AddNewOrder(ctx *gin.Context, db *gorm.DB, addNewOrd
     return
   }
 
+  PublishOrderMessage(fmt.Sprintf("orderId is [%s]", addNewOrderDto.OrderId))
   response.Response(ctx, errorcode.SUCCESS, order)
+}
+
+func (orderService *Service) UpdateStatus(ctx *gin.Context, orderId string)  {
+  db := engine.GetMysqlClient()
+
+  err := model.OrderUpdateStatus(db, orderId)
+  if err != nil {
+    response.ServerFailedResponse(ctx, errorcode.ErrorOrderAddNew)
+    return
+  }
+
+  response.Response(ctx, errorcode.SUCCESS, "更新成功")
 }
 
 func GetUniqueOrderId(ctx *gin.Context, db *gorm.DB) string  {
@@ -70,3 +86,11 @@ func GetUniqueOrderId(ctx *gin.Context, db *gorm.DB) string  {
   return orderId
 }
 
+func UpdateOrderStatus(orderId string)  {
+  db := engine.GetMysqlClient()
+
+  err := model.OrderUpdateStatus(db, orderId)
+  if err != nil {
+    common.Logger("OrderService", "OrderUpdateStatus", errorcode.ErrorOrderUpdate, err)
+  }
+}
