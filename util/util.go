@@ -5,6 +5,7 @@ import (
   "fmt"
   "io"
   "math/rand"
+  "strconv"
   "time"
 )
 
@@ -24,4 +25,13 @@ func GetMd5String(data string) string {
   io.WriteString(w, data)
   md5Str := fmt.Sprintf("%x", w.Sum(nil))
   return md5Str
+}
+
+func GetUniqueOrderId() string  {
+  month := time.Now().Format("01")
+  day := time.Now().Format("02")
+  timeStamp := time.Now().Unix()
+  randomString := GetRandomString(3)
+
+  return month + day + strconv.FormatInt(timeStamp, 10) + randomString
 }

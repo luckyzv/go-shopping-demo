@@ -7,7 +7,7 @@ import (
   "shopping/engine"
   "shopping/model"
   "shopping/response"
-  "shopping/response/constant"
+  "shopping/response/constant/errorcode"
   "shopping/src/dto"
   "shopping/src/service"
   "shopping/util"
@@ -32,20 +32,20 @@ func (c *UserController) UserRegister(ctx *gin.Context) {
 
   var user dto.UserLoginDto
   if err := ctx.ShouldBindJSON(&user); err != nil {
-    response.ClientFailedResponse(ctx, constant.ErrorRequiredParamFail)
+    response.ClientFailedResponse(ctx, errorcode.ErrorRequiredParamFail)
     return
   }
 
   // 手机号已被注册
   existed, _ := model.UserIsExistedByPhone(db, user.Phone)
   if existed {
-    response.ClientFailedResponse(ctx, constant.ErrorUserExisted)
+    response.ClientFailedResponse(ctx, errorcode.ErrorUserExisted)
     return
   }
   // 加密password
   hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
   if err != nil {
-    response.ServerFailedResponse(ctx, constant.ErrorUserHashedPasswordFail)
+    response.ServerFailedResponse(ctx, errorcode.ErrorUserHashedPasswordFail)
     return
   }
   // 生成用户
@@ -72,20 +72,20 @@ func (c *UserController) UserLogin(ctx *gin.Context) {
 
   var user dto.UserLoginDto
   if err := ctx.ShouldBindJSON(&user); err != nil {
-    response.ClientFailedResponse(ctx, constant.ErrorRequiredParamFail)
+    response.ClientFailedResponse(ctx, errorcode.ErrorRequiredParamFail)
     return
   }
 
   // 该手机号不存在
   isExisted, dbUser := model.UserGetOneByPhone(db, user.Phone)
   if !isExisted {
-    response.ClientFailedResponse(ctx, constant.ErrorUserNonExisted)
+    response.ClientFailedResponse(ctx, errorcode.ErrorUserNonExisted)
     return
   }
   // 比对密码失败
   err := bcrypt.CompareHashAndPassword([]byte(dbUser.PassWord), []byte(user.Password))
   if err != nil {
-    response.ClientFailedResponse(ctx, constant.ErrorUserPasswordCheckFail)
+    response.ClientFailedResponse(ctx, errorcode.ErrorUserPasswordCheckFail)
     return
   }
   userService.UserLogin(ctx, *dbUser)
@@ -96,11 +96,11 @@ func (c *UserController) UserInfo(ctx *gin.Context)  {
   userId, _ := ctx.Get("userId")
   user, err := model.UserGetOneById(db, userId.(uint))
   if err != nil {
-    response.ClientFailedResponse(ctx, constant.ErrorUserNonExisted)
+    response.ClientFailedResponse(ctx, errorcode.ErrorUserNonExisted)
     return
   }
 
-  response.Response(ctx, constant.SUCCESS, dto.ConvertModelUserToDto(*user))
+  response.Response(ctx, errorcode.SUCCESS, dto.ConvertModelUserToDto(*user))
 }
 
 func (c *UserController) GetUsers(ctx *gin.Context)  {
@@ -108,16 +108,16 @@ func (c *UserController) GetUsers(ctx *gin.Context)  {
   var getAllUsersDto dto.GetAllUsersDto
   err := ctx.ShouldBindJSON(&getAllUsersDto)
   if err != nil {
-    response.ClientFailedResponse(ctx, constant.ErrorRequiredParamFail)
+    response.ClientFailedResponse(ctx, errorcode.ErrorRequiredParamFail)
     return
   }
 
   users, err := userService.GetAllUsers(db, getAllUsersDto)
   if err != nil {
-    response.ServerFailedResponse(ctx , constant.ErrorUserFindFail)
-    common.Logger("UserService", "GetAllUsers", constant.ErrorUserFindFail, err)
+    response.ServerFailedResponse(ctx , errorcode.ErrorUserFindFail)
+    common.Logger("UserService", "GetAllUsers", errorcode.ErrorUserFindFail, err)
     return
   }
 
-  response.Response(ctx, constant.SUCCESS, users)
+  response.Response(ctx, errorcode.SUCCESS, users)
 }

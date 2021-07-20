@@ -5,7 +5,7 @@ import (
   "shopping/engine"
   "shopping/model"
   "shopping/response"
-  "shopping/response/constant"
+  "shopping/response/constant/errorcode"
   "shopping/src/dto"
   "shopping/src/service"
 )
@@ -14,18 +14,18 @@ type ProductController struct {}
 
 var productService = &service.ProductService{}
 
-func (c *ProductController) AddProduct(ctx *gin.Context)  {
+func (c *ProductController) AddNewProduct(ctx *gin.Context)  {
   db := engine.GetMysqlClient()
   var newProductDto dto.NewProductDto
 
   if err := ctx.ShouldBindJSON(&newProductDto); err != nil {
-    response.ClientFailedResponse(ctx, constant.ErrorRequiredParamFail)
+    response.ClientFailedResponse(ctx, errorcode.ErrorRequiredParamFail)
     return
   }
 
   existed, _ := model.ProductIsExistedBySkuId(db, newProductDto.SkuId)
   if existed {
-    response.ClientFailedResponse(ctx, constant.ErrorProductSkuIdDuplicated)
+    response.ClientFailedResponse(ctx, errorcode.ErrorProductSkuIdDuplicated)
     return
   }
 
@@ -42,5 +42,5 @@ func (c *ProductController) AddProduct(ctx *gin.Context)  {
 }
 
 func (c *ProductController) GetProduct(ctx *gin.Context)  {
-  response.Response(ctx, constant.SUCCESS, nil)
+  response.Response(ctx, errorcode.SUCCESS, nil)
 }

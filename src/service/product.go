@@ -6,7 +6,7 @@ import (
   "shopping/common"
   "shopping/model"
   "shopping/response"
-  "shopping/response/constant"
+  "shopping/response/constant/errorcode"
   "shopping/src/dto"
 )
 
@@ -20,11 +20,11 @@ type ProductService struct {
 func (productService *ProductService) AddNewProduct(ctx *gin.Context, db *gorm.DB, product model.Product)  {
   err := model.ProductAddNew(db, product)
   if err != nil {
-    response.ServerFailedResponse(ctx, constant.ErrorProductCreateProductFail)
-    common.Logger("ProductService","AddNewProduct", constant.ErrorProductCreateProductFail, err)
+    response.ServerFailedResponse(ctx, errorcode.ErrorProductCreateProductFail)
+    common.Logger("ProductService","AddNewProduct", errorcode.ErrorProductCreateProductFail, err)
     return
   }
-  response.Response(ctx , constant.SUCCESS, nil)
+  response.Response(ctx , errorcode.SUCCESS, nil)
 }
 
 func (productService *ProductService) GetMaps() map[string]interface{}  {

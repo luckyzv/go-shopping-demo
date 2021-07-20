@@ -1,20 +1,20 @@
 package middleware
 
 import (
-  "github.com/dgrijalva/jwt-go"
-  "github.com/gin-gonic/gin"
-  "shopping/common"
-  "shopping/response"
-  "shopping/response/constant"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"shopping/common"
+	"shopping/response"
+	"shopping/response/constant/errorcode"
 )
 
 func Auth() gin.HandlerFunc {
   return func(ctx *gin.Context) {
-    var code int
+    var code string
     prefix := "Bearer "
     token := ctx.GetHeader("Authorization")
     if token == "" || len(token) < len(prefix) || token[:len(prefix)] != prefix {
-      response.ClientFailedResponse(ctx, constant.ErrorRequiredHeaderFail)
+      response.ClientFailedResponse(ctx, errorcode.ErrorRequiredHeaderFail)
       return
     }
 
@@ -22,9 +22,9 @@ func Auth() gin.HandlerFunc {
     if err != nil {
       switch err.(*jwt.ValidationError).Errors {
       case jwt.ValidationErrorExpired:
-        code = constant.ErrorTokenTimeOut
+        code = errorcode.ErrorTokenTimeOut
       default:
-        code = constant.ErrorTokenCheckFail
+        code = errorcode.ErrorTokenCheckFail
       }
       response.ClientFailedResponse(ctx, code)
       return

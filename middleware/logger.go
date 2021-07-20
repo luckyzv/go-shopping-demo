@@ -67,7 +67,7 @@ func loggerFormat() func(c *gin.Context)  {
       res := response.SuccessResBody{}
       err := json.Unmarshal([]byte(responseBody), &res)
       if err == nil {
-        responseCode = strconv.Itoa(res.Code)
+        responseCode = res.Code
         responseMsg = res.Message
         responseData = res.Data
       }

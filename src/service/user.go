@@ -6,7 +6,7 @@ import (
   "shopping/common"
   "shopping/model"
   "shopping/response"
-  "shopping/response/constant"
+  "shopping/response/constant/errorcode"
   "shopping/src/dto"
 )
 
@@ -20,21 +20,21 @@ type UserService struct {
 func (userService *UserService) UserRegister(ctx *gin.Context, db *gorm.DB, user model.User)  {
   err := model.UserAddNew(db, user)
   if err != nil {
-    response.ServerFailedResponse(ctx , constant.ErrorUserCreateUserFail)
+    response.ServerFailedResponse(ctx , errorcode.ErrorUserCreateUserFail)
     return
   }
-  response.Response(ctx , constant.SUCCESS, nil)
+  response.Response(ctx , errorcode.SUCCESS, nil)
 }
 
 func (userService *UserService) UserLogin(ctx *gin.Context, user model.User) {
   token, err := common.ReleaseToken(user)
   if err != nil {
-    response.ServerFailedResponse(ctx , constant.ErrorUserTokenReleaseFail)
-    common.Logger("UserService", "UserLogin", constant.ErrorUserTokenReleaseFail, err)
+    response.ServerFailedResponse(ctx , errorcode.ErrorUserTokenReleaseFail)
+    common.Logger("UserService", "UserLogin", errorcode.ErrorUserTokenReleaseFail, err)
     return
   }
 
-  response.Response(ctx, constant.SUCCESS, dto.UserLoginResponseDto(user, token))
+  response.Response(ctx, errorcode.SUCCESS, dto.UserLoginResponseDto(user, token))
 }
 
 func (userService *UserService) GetAllUsers(db *gorm.DB, usersDto dto.GetAllUsersDto) ([]model.User, error) {

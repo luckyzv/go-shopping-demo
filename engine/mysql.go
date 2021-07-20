@@ -33,7 +33,7 @@ func init()  {
   sqlDb.SetConnMaxLifetime(time.Hour)
 
   // 初始化table
-  db.AutoMigrate(&model.User{}, &model.Product{})
+  db.AutoMigrate(&model.User{}, &model.Product{}, &model.Order{}, &model.OrderProduct{}, &model.OrderHistory{}, &model.OrderPayment{})
 
   fmt.Println("初始化数据库成功")
 }

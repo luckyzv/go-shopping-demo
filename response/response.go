@@ -4,16 +4,17 @@ import (
   "github.com/gin-gonic/gin"
   "net/http"
   "shopping/response/constant"
+  "strconv"
 )
 
 type SuccessResBody struct {
-  Code int `json:"code"`
+  Code string `json:"code"`
   Message string `json:"message"`
   Data interface{} `json:"data"`
 }
 
 type FailedResBody struct {
-  Code int `json:"code"`
+  Code string `json:"code"`
   Message string `json:"message"`
   Url string `json:"url"`
 }
@@ -25,7 +26,7 @@ type FailedResBody struct {
 //}
 
 
-func Response(c *gin.Context, errorCode int, data interface{})  {
+func Response(c *gin.Context, errorCode string, data interface{})  {
   c.JSON(http.StatusOK, SuccessResBody{
     Code: errorCode,
     Message: constant.GetMessage(errorCode),
@@ -36,14 +37,14 @@ func Response(c *gin.Context, errorCode int, data interface{})  {
 
 func NotFound(c *gin.Context)  {
   c.JSON(http.StatusNotFound, FailedResBody{
-    Code: http.StatusNotFound,
+    Code: strconv.Itoa(http.StatusNotFound),
     Message: "Not Found",
-    Url: c.Request.URL.Path,
+    Url:     c.Request.URL.Path,
   })
   c.Abort()
 }
 
-func ClientFailedResponse(c *gin.Context, errorCode int)  {
+func ClientFailedResponse(c *gin.Context, errorCode string)  {
  c.JSON(http.StatusUnauthorized, FailedResBody{
    Code: errorCode,
    Message: constant.GetMessage(errorCode),
@@ -52,11 +53,11 @@ func ClientFailedResponse(c *gin.Context, errorCode int)  {
  c.Abort()
 }
 
-func ServerFailedResponse(c *gin.Context, errCode int) {
+func ServerFailedResponse(c *gin.Context, errCode string) {
   c.JSON(http.StatusInternalServerError, FailedResBody{
     Code: errCode,
     Message: constant.GetMessage(errCode),
-    Url: c.Request.URL.Path,
+    Url:     c.Request.URL.Path,
   })
   c.Abort()
 }

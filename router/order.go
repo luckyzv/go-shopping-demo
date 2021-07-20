@@ -1,13 +1,16 @@
 package router
 
 import (
-  "github.com/gin-gonic/gin"
-	"shopping/src/controller"
+	"github.com/gin-gonic/gin"
+  "shopping/middleware"
+  "shopping/src/order"
 )
 
 func OrderRouters(e *gin.Engine)  {
-  c := &controller.OrderController{}
-  order := e.Group("/api/v1/orders")
+  c := &order.Controller{}
+  orderRouter := e.Group("/api/v1/orders")
 
-  order.GET("/hello", c.CreateOrder)
+  orderRouter.Use(middleware.Auth())
+  orderRouter.GET("/orderId", c.GetOrderId)
+  orderRouter.POST("", c.AddNewOrder)
 }
