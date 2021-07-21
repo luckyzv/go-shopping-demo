@@ -24,6 +24,11 @@ func (c *Controller) AddNewOrder(ctx *gin.Context)  {
     return
   }
 
+  if engine.Get("orderId:" + addNewOrderDto.OrderId) != "1" {
+    response.ClientFailedResponse(ctx, errorcode.ErrorOrderIdWrong)
+    return
+  }
+
   existed, _:= model.OrderIsExistedByOrderId(db, addNewOrderDto.OrderId)
   if existed {
     response.ClientFailedResponse(ctx, errorcode.ErrorOrderIdDuplicated)
@@ -37,5 +42,7 @@ func (c *Controller) GetOrderId(ctx *gin.Context) {
   db := engine.GetMysqlClient()
 
   orderId := GetUniqueOrderId(ctx, db)
+  engine.Set("orderId:" + orderId,"1", 0)
+
   response.Response(ctx, errorcode.SUCCESS, map[string]string{"orderId": orderId})
 }

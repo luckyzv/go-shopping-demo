@@ -50,17 +50,34 @@ func (orderService Service) AddNewOrder(ctx *gin.Context, db *gorm.DB, addNewOrd
     OrderId: addNewOrderDto.OrderId,
     Price: totalPrice,
     User: *user,
-    Products: orderProducts,
+    OrderProducts: orderProducts,
     OrderHistories: []model.OrderHistory{{}},
     OrderPayments: []model.OrderPayment{{TotalPrice: totalPrice, Discount: 0, RealPaid: totalPrice }},
   }
-  err := model.OrderAddNew(db, order)
+
+  // 事务 减库存
+  tx := db.Begin()
+
+  err := tx.Create(&order).Error
   if err != nil {
+    tx.Rollback()
     response.ServerFailedResponse(ctx, errorcode.ErrorOrderAddNew)
     return
   }
 
+  for id, num := range productInfo {
+    rowsAffected := tx.Model(&model.Product{}).Where("id = ? AND stock > ?", id, num).Update("stock", gorm.Expr("stock - ?", num)).RowsAffected
+    if rowsAffected == 0 {
+      tx.Rollback()
+      response.ClientFailedResponse(ctx, errorcode.ErrorOrderSubStock)
+      return
+    }
+  }
+
+  tx.Commit()
+
   PublishOrderMessage(fmt.Sprintf("orderId is [%s]", addNewOrderDto.OrderId))
+
   response.Response(ctx, errorcode.SUCCESS, order)
 }
 
@@ -91,6 +108,6 @@ func UpdateOrderStatus(orderId string)  {
 
   err := model.OrderUpdateStatus(db, orderId)
   if err != nil {
-    common.Logger("OrderService", "OrderUpdateStatus", errorcode.ErrorOrderUpdate, err)
+    common.Logger("OrderService", "OrderUpdateStatus", errorcode.ErrorOrderUpdate, err, orderId)
   }
 }

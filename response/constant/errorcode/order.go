@@ -2,8 +2,10 @@ package errorcode
 
 const (
   ErrorOrderIdDuplicated = "o40001"
-  ErrorOrderTotalPriceWrong = "040002"
+  ErrorOrderTotalPriceWrong = "o40002"
+  ErrorOrderSubStock = "o40003"
+  ErrorOrderIdWrong = "o40004"
 
-  ErrorOrderAddNew = "050001"
-  ErrorOrderUpdate = "050002"
+  ErrorOrderAddNew = "o50001"
+  ErrorOrderUpdate = "o50002"
 )

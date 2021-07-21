@@ -21,7 +21,7 @@ func (productService *ProductService) AddNewProduct(ctx *gin.Context, db *gorm.D
   err := model.ProductAddNew(db, product)
   if err != nil {
     response.ServerFailedResponse(ctx, errorcode.ErrorProductCreateProductFail)
-    common.Logger("ProductService","AddNewProduct", errorcode.ErrorProductCreateProductFail, err)
+    common.Logger("ProductService","AddNewProduct", errorcode.ErrorProductCreateProductFail, err, product)
     return
   }
   response.Response(ctx , errorcode.SUCCESS, nil)

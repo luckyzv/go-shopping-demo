@@ -14,7 +14,7 @@ type Order struct {
 
   UserId uint `json:"userId"`
   User User  `json:"user"`
-  Products []OrderProduct `json:"orderProducts"`
+  OrderProducts []OrderProduct `json:"orderProducts"`
   OrderHistories []OrderHistory `json:"orderHistories"`
   OrderPayments []OrderPayment `json:"orderPayments"`
 }
@@ -48,6 +48,13 @@ func OrderGetAll(db *gorm.DB, ids []int) ([]Order, int64)  {
   result := db.Find(&orders, ids)
 
   return orders, result.RowsAffected
+}
+
+func OrderGetOne(db *gorm.DB, orderId string) Order  {
+  var order Order
+  db.Where("order_id = ?", orderId).First(&order)
+
+  return order
 }
 
 func OrderUpdateStatus(db *gorm.DB, orderId string) error  {

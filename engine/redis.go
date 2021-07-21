@@ -29,10 +29,6 @@ func init()  {
   })
 }
 
-func GetRedisClient() *redis.Client {
-  return redisClient
-}
-
 func Set(key string, value interface{}, expiration time.Duration)  {
   redisClient.Set(ctx, key, value, expiration)
 }

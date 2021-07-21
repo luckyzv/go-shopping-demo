@@ -32,7 +32,7 @@ func (c *AdminController) GetALlUsers(ctx *gin.Context) {
   allUsers, err := service.UserGetAll(db, adminDto.PageNum, adminDto.PageSize, adminDto.Status)
   if err != nil {
     response.ServerFailedResponse(ctx, errorcode.ErrorUserFindFail)
-    common.Logger("AdminController", "GetAllUsers", errorcode.ErrorUserFindFail, err)
+    common.Logger("AdminController", "GetAllUsers", errorcode.ErrorUserFindFail, err, adminDto)
     return
   }
 

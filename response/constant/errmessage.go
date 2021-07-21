@@ -28,6 +28,8 @@ var MessageFlags = map[string]string{
   errorcode.ErrorOrderIdDuplicated: "请勿重复提交订单",
   errorcode.ErrorOrderTotalPriceWrong: "价格提交错误",
   errorcode.ErrorOrderUpdate: "订单更新失败",
+  errorcode.ErrorOrderSubStock: "库存不足",
+  errorcode.ErrorOrderIdWrong: "错误来源的order_id",
 }
 
 func GetMessage(code string) string {

@@ -3,9 +3,11 @@ package order
 import (
   "fmt"
   "github.com/streadway/amqp"
+  "gorm.io/gorm"
   "log"
   "shopping/config"
   "shopping/engine"
+  "shopping/model"
   "strings"
 )
 
@@ -34,11 +36,14 @@ func PublishOrderMessage(msg string)  {
 
 func consumeOrderMessage()  {
   keyConfig := config.GetAmqpKeyConfig()
-  fmt.Println("初始化死信队列")
 
   channel, err := engine.GetRabbitmqConn().Channel()
   defer channel.Close()
   FailOnError(err, "Failed to open a channel")
+
+  // 最多只能允许接收三个未确认的
+  err = channel.Qos(3, 0, false)
+  FailOnError(err, "Failed to setting qos")
 
   err = channel.ExchangeDeclare(keyConfig.OrderExchange, amqp.ExchangeDirect, true, false, false, false, nil)
   FailOnError(err, "Failed to declare a exchange")
@@ -46,7 +51,7 @@ func consumeOrderMessage()  {
   argsQue := make(map[string]interface{})
   argsQue["x-dead-letter-exchange"] = keyConfig.OrderDlxExchange
   argsQue["x-dead-letter-routing-key"] = keyConfig.OrderDlxRoutingKey
-  argsQue["x-message-ttl"] = 1000 * 6 // 毫秒
+  argsQue["x-message-ttl"] = 1000 * 30 // 单位：毫秒， 30s
 
   queue, err := channel.QueueDeclare(keyConfig.OrderQueue, true, false, false, false, argsQue)
   FailOnError(err, "Failed to declare a queue")
@@ -71,6 +76,7 @@ func consumeOrderMessage()  {
 func ConsumerDlx()  {
   consumeOrderMessage()
 
+  db := engine.GetMysqlClient()
   keyConfig := config.GetAmqpKeyConfig()
   channel, err := engine.GetRabbitmqConn().Channel()
   defer channel.Close()
@@ -96,14 +102,31 @@ func ConsumerDlx()  {
       index := strings.Index(str, "[")
       orderId := str[index + 1 : len(str) - 1]
 
-      UpdateOrderStatus(orderId)
+      // 事务中进行
+      db.Transaction(func(tx *gorm.DB) error {
+        var order model.Order
+        tx.Model(&model.Order{}).Where("orders.order_id = ?", orderId).Find(&order)
+
+        if order.Status == "created" {
+          // 修改为取消状态
+         tx.Model(&order).Update("status", "canceled")
+
+         // 加库存
+         var orderProducts []model.OrderProduct
+         tx.Model(&order).Association("OrderProducts").Find(&orderProducts)
+         for _, orderProduct := range orderProducts {
+           tx.Model(&model.Product{}).Where("id = ?", orderProduct.ProductID).Update("stock", gorm.Expr("stock + ?", orderProduct.Num))
+         }
+        }
+
+        return nil
+      })
 
       message.Ack(false) // 手动确认该消息已被消费，false表示只针对当前消息
       log.Printf("死信队列接收端: ======= [x] %s", message.Body)
     }
   }()
   <-forever
-
 }
 
 func FailOnError(err error, msg string)  {

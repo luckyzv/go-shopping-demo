@@ -91,11 +91,12 @@ func rotateFileAndNewHook(fileName string) (*lfshook.LfsHook, *rotatelogs.Rotate
 
 // Logger 记录系统内部错误接口 结合请求日志排查bug
 // @packageName 包名 @funcName 函数名 @errCode 内部错误码 @err 错误内容
-func Logger(packageName string, funcName string, errCode string, err error)  {
+func Logger(packageName string, funcName string, errCode string, err error, funcParam interface{})  {
   appLogger().WithFields(logrus.Fields{
     "packageName": packageName,
     "funcName": funcName,
     "innerErrCode": errCode,
+    "funcParam": funcParam,
   }).Errorf("系统内部错误：【%v】", err)
 }
 

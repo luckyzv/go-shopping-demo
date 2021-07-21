@@ -30,7 +30,7 @@ func (userService *UserService) UserLogin(ctx *gin.Context, user model.User) {
   token, err := common.ReleaseToken(user)
   if err != nil {
     response.ServerFailedResponse(ctx , errorcode.ErrorUserTokenReleaseFail)
-    common.Logger("UserService", "UserLogin", errorcode.ErrorUserTokenReleaseFail, err)
+    common.Logger("UserService", "UserLogin", errorcode.ErrorUserTokenReleaseFail, err, user)
     return
   }
 

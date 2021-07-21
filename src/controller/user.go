@@ -115,7 +115,7 @@ func (c *UserController) GetUsers(ctx *gin.Context)  {
   users, err := userService.GetAllUsers(db, getAllUsersDto)
   if err != nil {
     response.ServerFailedResponse(ctx , errorcode.ErrorUserFindFail)
-    common.Logger("UserService", "GetAllUsers", errorcode.ErrorUserFindFail, err)
+    common.Logger("UserService", "GetAllUsers", errorcode.ErrorUserFindFail, err, getAllUsersDto)
     return
   }
 
