@@ -2,7 +2,7 @@ version: '3'
 services:
   go-shopping-demo:
     container_name: go-shopping-staging
-    image: registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:0.0.6
+    image: registry.cn-shanghai.aliyuncs.com/luckyziv/go-shopping-demo:0.0.7
     ports:
       - "3003:3002"
     environment:
@@ -35,8 +35,8 @@ services:
     - "5672:5672"
     - "15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=order
-      - RABBITMQ_DEFAULT_PASS=order
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
     volumes:
     - ../data/rabbitmq_data:/var/lib/rabbitmq
   elasticsearch:

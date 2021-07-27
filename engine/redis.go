@@ -1,14 +1,12 @@
 package engine
 
 import (
-  "context"
   "github.com/go-redis/redis/v8"
   "shopping/config"
   "time"
 )
 
 var redisClient *redis.Client
-var ctx = context.Background()
 
 func init()  {
   viperConfig := config.GetRedisConfig()
@@ -29,10 +27,14 @@ func init()  {
   })
 }
 
+func GetRedisClient() *redis.Client {
+  return redisClient
+}
+
 func Set(key string, value interface{}, expiration time.Duration)  {
-  redisClient.Set(ctx, key, value, expiration)
+  redisClient.Set(redisClient.Context(), key, value, expiration)
 }
 
 func Get(key string) string {
-  return redisClient.Get(ctx, key).Val()
+  return redisClient.Get(redisClient.Context(), key).Val()
 }

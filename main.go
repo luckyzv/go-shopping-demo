@@ -39,12 +39,6 @@ func main() {
   r.Use(middleware.Logger())
   router.Init(r)
 
-  //var wg sync.WaitGroup
-  //for _, v := range []string{"1","2","1","2","2","3","7"} {
-  //  wg.Add(1)
-  //  go util.EvalScript(engine.GetRedisClient(), v, &wg)
-  //}
-
   viperConfig := config.GetServerConfig()
   port := viperConfig.Port
   if port != "" {

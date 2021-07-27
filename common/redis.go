@@ -3,8 +3,20 @@ package common
 import (
   "fmt"
   "github.com/go-redis/redis/v8"
-  "sync"
+  "shopping/engine"
 )
+
+const (
+  LuaNumLessStock = iota - 3
+
+  LuaKeyNonExist
+
+  LuaStockEmpty
+
+  LuaHadBuy
+
+  LuaSuccess
+  )
 
 func CreateScript(script string) *redis.Script {
   luaScript := redis.NewScript(script)
@@ -16,26 +28,32 @@ func SecondKillScript() *redis.Script  {
     local goodsStock
     local flag
     local hadBuyUserIds = tostring(KEYS[1])
-    local userId = tonumber(ARGV[1])
     local goodsStockKey = tostring(KEYS[2])
-    local hadBuy = redis.call("sIsMember", hadBuyUserIds, userId)
 
-    -- 该用户已经购买商品
-    if hadBuy ~= 0 then
-      return 0
-    end
+    local userId = tonumber(ARGV[1])
+    local hadBuy = redis.call("sIsMember", hadBuyUserIds, userId)
 
     -- 库存键不存在
     goodsStock = redis.call("GET", goodsStockKey)
     if goodsStock == false then
-      return 0
+      return -2
     end
 
-    -- 库存不足
+    -- 该用户已经购买商品
+    -- if hadBuy ~= 0 then
+     -- return 0
+    -- end
+
+    -- 售空，库存<=0
     goodsStock = tonumber(goodsStock)
     if goodsStock <= 0 then
-      return 0
+      return -1
     end
+
+    -- 库存数小于用户购买数
+    -- if goodsStock <= 0 then
+     -- return -3
+    -- end
 
     flag = redis.call("SADD", hadBuyUserIds, userId)
     flag = redis.call("DECR", goodsStockKey)
@@ -44,8 +62,10 @@ func SecondKillScript() *redis.Script  {
 }
 
 
-func EvalSecondScript(client *redis.Client, userId string, wg *sync.WaitGroup) {
+func EvalSecondScript(userId uint) interface{} {
+  client := engine.GetRedisClient()
   secondKillScript := SecondKillScript()
+
   sha, err := secondKillScript.Load(client.Context(), client).Result()
   FailOnError(err, "Load lua脚本失败")
 
@@ -58,6 +78,7 @@ func EvalSecondScript(client *redis.Client, userId string, wg *sync.WaitGroup) {
     FailOnError(err, "执行lua脚本失败")
   }
 
-  fmt.Println("")
-  fmt.Printf("userId: %s, result: %d", userId, result)
+  fmt.Printf("userId: %d, result: %d\n", userId, result)
+
+  return result
 }

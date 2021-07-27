@@ -13,4 +13,5 @@ func OrderRouters(e *gin.Engine)  {
   orderRouter.Use(middleware.Auth())
   orderRouter.GET("/orderId", c.GetOrderId)
   orderRouter.POST("", c.AddNewOrder)
+  orderRouter.POST("/sec-kill", c.AddNewSecKillOrder)
 }
